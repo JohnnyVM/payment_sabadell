@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+	<!-- Data to database  -->
+    <record id="payment_acquirer_sabadell" model="payment.acquirer">
+        <field name="name">Sabadell</field>
+        <field name="image" type="base64" file="payment_sabadell/static/description/sabadell-icon.png"/>
+        <field name="provider">sabadell</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="view_template_id" ref="sabadell_form"/>
+        <field name="environment">test</field>
+        <field name="pre_msg"><![CDATA[<p>You will be redirected to the Sabadell payment gateway after clicking on the payment button.</p>]]></field>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards.
+            </p>
+            <ul>
+                <li><i class="fa fa-check"/>eCommerce</li>
+            </ul>
+        </field>
+    </record>
+
+</odoo>

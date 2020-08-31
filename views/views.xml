@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- Form declared in data -->
+	<data noupdate="0">
+		<template id="sabadell_form">
+			<div>
+			</div>
+		</template>
+	</data>
+</odoo>
