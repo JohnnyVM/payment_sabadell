@@ -4,7 +4,7 @@
     "summary": "Payment Acquirer: Sabadell Implementation",
     "version": "0.1.0",
     "author": "Juan Vázquez Moreno <vmjuan90@gmail.com>",
-    "depends": ["payment", "website_sale"],
+    "depends": ["payment"],
     "data": [
         'views/views.xml',
         'data/data.xml'

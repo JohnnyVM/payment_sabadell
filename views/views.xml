@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<!-- Form declared in data -->
-	<data noupdate="0">
-		<template id="sabadell_form">
-			<div>
-			</div>
-		</template>
+	<!-- Opciones de configuración del módulo -->
+	<data>
+		<record id="acquirer_form_sabadell" model="ir.ui.view">
+			<field name="name">acquirer.form.sabadell</field>
+			<field name="model">payment.acquirer</field>
+			<field name="inherit_id" ref="payment.acquirer_form" />
+			<field name="arch" type="xml">
+				<xpath expr='//group[@name="acquirer"]' position='after'>
+					<group attrs="{'invisible': [('provider', '!=', 'sabadell')]}">
+						<!-- field name="sabadell_email_account" / -->
+					</group>
+				</xpath>
+			</field>
+		</record>
 	</data>
+
 </odoo>
