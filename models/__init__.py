@@ -1,2 +1,2 @@
 
-from . import payment
+from . import sabadell

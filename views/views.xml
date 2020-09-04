@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 	<!-- Opciones de configuración del módulo -->
-	<data>
+	<data >
 		<record id="acquirer_form_sabadell" model="ir.ui.view">
 			<field name="name">acquirer.form.sabadell</field>
 			<field name="model">payment.acquirer</field>
@@ -9,11 +9,16 @@
 			<field name="arch" type="xml">
 				<xpath expr='//group[@name="acquirer"]' position='after'>
 					<group attrs="{'invisible': [('provider', '!=', 'sabadell')]}">
-						<!-- field name="sabadell_email_account" / -->
+						<field name="sabadell_email_account" />
 					</group>
 				</xpath>
 			</field>
 		</record>
-	</data>
 
+        <template id="sabadell_form">
+            <div>
+            </div>
+        </template>
+
+	</data>
 </odoo>
