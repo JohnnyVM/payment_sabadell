@@ -13,6 +13,7 @@
 				<p>A payment gateway to accept online payments via credit cards.</p>
 			</field>
 			<field name="sabadell_email_account">example@paycomet.com</field>
+			<field name="sabadell_integration">fullscreen</field>
 		</record>
 		</data>
 </odoo>

@@ -11,6 +11,7 @@ from odoo import api, models, fields, http
 _logger = logging.getLogger(__name__)
 
 class AcquirerSabadell(models.Model):
+    """ Sabadell Model class """
     _inherit = 'payment.acquirer'
 
     cription = "Sabadell payment acquirer model"
@@ -19,6 +20,16 @@ class AcquirerSabadell(models.Model):
 
     sabadell_email_account = \
             fields.Char("Sabadell email account", required_if_provider="sabadell", groups="base.group_user")
+
+    # Payment types
+    sabadell_integration = fields.Selection(
+        [('fullscreen', 'Fullscreen'), ('iframe', 'Iframe'), ('embedded', 'Embedded')],
+        "Sabadell integration method",
+        default="fullscreen",
+        required=True,
+        required_if_provider="sabadell",
+        help="Integration method: https://www.bsdev.es/en/documentacion/introduccion"
+    )
 
     @api.model
     def _get_website_url(self):
@@ -33,6 +44,7 @@ class AcquirerSabadell(models.Model):
         return base_url or ""
 
     def sabadell_get_form_action_url(self):
+        """ Return URL for payment controller"""
         return self._get_website_url() + "/sabadell_payment"
 
 #    @api.multi
@@ -40,5 +52,5 @@ class AcquirerSabadell(models.Model):
 #        self.ensure_one()
 #        return dict() # values added to button "Pay Now" render response
 
-    # TODO compute fees
-    
+#    def compute fees(self):
+#       pass

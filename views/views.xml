@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<!-- Opciones de configuración del módulo -->
 	<data >
+
+		<!-- Opciones de configuración del módulo -->
 		<record id="acquirer_form_sabadell" model="ir.ui.view">
 			<field name="name">acquirer.form.sabadell</field>
 			<field name="model">payment.acquirer</field>
@@ -10,20 +11,11 @@
 				<xpath expr='//group[@name="acquirer"]' position='after'>
 					<group attrs="{'invisible': [('provider', '!=', 'sabadell')]}">
 						<field name="sabadell_email_account" />
+						<field name="sabadell_integration" />
 					</group>
 				</xpath>
 			</field>
 		</record>
 
-		<!-- Declaración mínima obligatoria -->
-		<template id="sabadell_form">
-			<div>
-				<input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me="" />
-			</div>
-		</template>
-
-		<template id="sabadell_iframe">
-			<iframe title="Sabadell payment" src="https://api.paycomet.com/gateway/ifr-bankstore?MERCHANT_MERCHANTCODE=0gs265nc……" width="400" height="525" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="border: 0px solid #000000; padding: 0px; margin: 0px"></iframe>
-		</template>
 	</data>
 </odoo>
