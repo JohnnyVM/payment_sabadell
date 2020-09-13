@@ -10,8 +10,14 @@
 			<field name="arch" type="xml">
 				<xpath expr='//group[@name="acquirer"]' position='after'>
 					<group attrs="{'invisible': [('provider', '!=', 'sabadell')]}">
-						<field name="sabadell_email_account" />
-						<field name="sabadell_integration" />
+						<field name="sabadell_merchant_merchantcode" />
+						<field name="sabadell_merchant_terminal" />
+						<field name="sabadell_merchant_password" />
+						<field name="sabadell_3dsecure" />
+						<!-- TODO other implementations -->
+						<!-- field name="sabadell_integration" />
+						<field name="sabadell_language" />
+						<field name="sabadell_currency" /-->
 					</group>
 				</xpath>
 			</field>

@@ -12,8 +12,9 @@
 			<field name="description" type="html">
 				<p>A payment gateway to accept online payments via credit cards.</p>
 			</field>
-			<field name="sabadell_email_account">example@paycomet.com</field>
-			<field name="sabadell_integration">fullscreen</field>
+			<field name="sabadell_merchant_merchantcode">dummy</field>
+			<field name="sabadell_merchant_terminal">123456</field>
+			<field name="sabadell_merchant_password">dummy</field>
 		</record>
 		</data>
 </odoo>

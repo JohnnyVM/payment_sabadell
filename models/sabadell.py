@@ -18,17 +18,39 @@ class AcquirerSabadell(models.Model):
 
     provider = fields.Selection(selection_add=[('sabadell', 'Sabadell')])
 
-    sabadell_email_account = \
-            fields.Char("Sabadell email account", required_if_provider="sabadell", groups="base.group_user")
+    sabadell_merchant_merchantcode = \
+            fields.Char("Merchant code", size=8, required_if_provider="sabadell", groups="base.group_user")
+
+    sabadell_merchant_terminal = \
+            fields.Integer("Merchant terminal", required_if_provider="sabadell", groups="base.group_user")
+
+    sabadell_merchant_password = \
+            fields.Char("Merchant password", required_if_provider="sabadell", groups="base.group_user")
+
+    sabadell_language = fields.Selection(
+        [('es', 'Español'), ('en', 'English'), ('fr', 'French'), ('de', 'German'), ('it', 'Italian')],
+        "Sabadell language environment",
+        default="EN",
+        required_if_provider="sabadell"
+    )
+
+    sabadell_currency = fields.Selection(
+        [('EUR', 'Euro'), ('USD', 'American dollar'), ('GBP', 'Libra esterlina'), ('JPY', 'Japanese yen')],
+        "Transaction currency",
+        default="EUR",
+        required_if_provider="sabadell"
+    )
+
+    sabadell_3dsecure = fields.Boolean("3DSecure", groups="base.group_user")
 
     # Payment types
     sabadell_integration = fields.Selection(
         [('fullscreen', 'Fullscreen'), ('iframe', 'Iframe'), ('embedded', 'Embedded')],
         "Sabadell integration method",
         default="fullscreen",
-        required=True,
         required_if_provider="sabadell",
-        help="Integration method: https://www.bsdev.es/en/documentacion/introduccion"
+        help="Integration method: https://www.bsdev.es/en/documentacion/introduccion",
+        groups="base.group_user"
     )
 
     @api.model
