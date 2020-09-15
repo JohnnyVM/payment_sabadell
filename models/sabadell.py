@@ -30,7 +30,7 @@ class AcquirerSabadell(models.Model):
     sabadell_language = fields.Selection(
         [('es', 'Español'), ('en', 'English'), ('fr', 'French'), ('de', 'German'), ('it', 'Italian')],
         "Sabadell language environment",
-        default="EN",
+        default="en",
         required_if_provider="sabadell"
     )
 
