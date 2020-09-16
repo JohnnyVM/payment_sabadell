@@ -76,3 +76,10 @@ class AcquirerSabadell(models.Model):
 
 #    def compute fees(self):
 #       pass
+
+
+class SabadellTransaction(models.Model):
+    _inherit="payment.transaction"
+
+    def sabadell_form_feedback(self, data):
+        _logger.info("sabadell_form_feedback data: {}".format(data))

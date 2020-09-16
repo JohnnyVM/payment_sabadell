@@ -7,6 +7,7 @@ import logging
 from hashlib import sha256, md5
 from decimal import Decimal
 
+import werkzeug
 from odoo import http
 from odoo.http import request
 
@@ -14,11 +15,11 @@ _logger = logging.getLogger(__name__)
 
 class SabadellController(http.Controller):
 
-    @http.route('/sabadell_payment', auth='public', csrf=False)
+    @http.route('/sabadell_payment', auth='public', csrf=False, cors='*')
     def payment(self, **post):
         url = "https://api.paycomet.com/gateway/ifr-bankstore"
 
-        provider = request.env['payment.acquirer'].search([('provider', '=', 'sabadell')])
+        provider = request.env['payment.acquirer'].sudo().search([('provider', '=', 'sabadell')])
         provider.ensure_one()
 
         params = {
@@ -61,6 +62,20 @@ class SabadellController(http.Controller):
 
         return http.request.render("payment_sabadell.sabadell_iframe", {"iframe_url": iframe_url})
 
-    @http.route(['/sabadell_ok', '/sabadell_ko', '/sabadell_notification'], auth='public', :wqcsrf=False)
-    def transaction(self, **post):
-        _logger.info("Sabadell transaction receibed {}".format(post))
+    @http.route('/sabadell_ko', website=False, type="http", multilang = False, lang=None)
+    def transaction_ko(self, **post):
+        _logger.info("Sabadell KO transaction feedback {}".format(post))        
+        return "Some error happens requesting the payment, payment canceled..."
+
+    @http.route('/sabadell_notification', type="http", auth="public", method=["GET"], website=True)
+    def transaction_notification(self, **post):
+        _logger.info("Sabadell notification transaction feedback {}".format(post)) 
+        return werkzeug.utils.redirect(post.get("return_url", "/payment/process"))
+
+    @http.route('/sabadell_ok', type="http", auth="public", method=["GET"], website=True)
+    def transaction_ok(self, **post):
+        _logger.info("Sabadell OK transaction feedback {}".format(post)) 
+        request.env['payment.transaction'].sudo().form_feedback(post, 'sabadell')
+        return werkzeug.utils.redirect(post.get("return_url", "/payment/process"))
+
+
