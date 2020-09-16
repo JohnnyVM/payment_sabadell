@@ -2,6 +2,7 @@
 
 import urllib.parse
 import binascii
+import logging
 
 from hashlib import sha256, md5
 from decimal import Decimal
@@ -9,10 +10,12 @@ from decimal import Decimal
 from odoo import http
 from odoo.http import request
 
+_logger = logging.getLogger(__name__)
+
 class SabadellController(http.Controller):
 
     @http.route('/sabadell_payment', auth='public', csrf=False)
-    def main(self, **post):
+    def payment(self, **post):
         url = "https://api.paycomet.com/gateway/ifr-bankstore"
 
         provider = request.env['payment.acquirer'].search([('provider', '=', 'sabadell')])
@@ -57,3 +60,7 @@ class SabadellController(http.Controller):
         iframe_url = url + '?' + payload
 
         return http.request.render("payment_sabadell.sabadell_iframe", {"iframe_url": iframe_url})
+
+    @http.route(['/sabadell_ok', '/sabadell_ko', '/sabadell_notification'], auth='public', :wqcsrf=False)
+    def transaction(self, **post):
+        _logger.info("Sabadell transaction receibed {}".format(post))

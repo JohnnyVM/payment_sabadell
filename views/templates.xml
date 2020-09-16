@@ -15,7 +15,18 @@
 		</template>
 
 		<template id="sabadell_iframe">
-			<iframe title="Sabadell payment" t-att-src="iframe_url" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="border: 0px solid #000000; padding: 0px; margin: 0px"></iframe>
+
+			<html lang="en">
+				<head>
+					<meta charset="utf-8"></meta>
+					<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+					<title>Sabadell payment acquirer</title>
+				</head>
+				<body style="margin: 0px;">
+					<iframe title="Sabadell payment" t-att-src="iframe_url" frameborder="0" marginheight="0" marginwidth="0" style="border: 0px solid #000000; padding: 0px; margin: 0px; height: 100%; width: 100%;"></iframe>
+				</body>
+			</html>
+
 		</template>
 
 	</data>
