@@ -43,6 +43,7 @@ class SabadellController(http.Controller):
             params["MERCHANT_SCA_EXCEPTION"] = "LWV"
 
         # params["MERCHANT_DATA"]
+        # params Curency
 
         params["MERCHANT_MERCHANTSIGNATURE"] = \
                 sha256(bytes(
@@ -62,17 +63,17 @@ class SabadellController(http.Controller):
 
         return http.request.render("payment_sabadell.sabadell_iframe", {"iframe_url": iframe_url})
 
-    @http.route('/sabadell_ko', website=False, type="http", multilang = False, lang=None)
+    @http.route('/sabadell_ko', website=False, type="http", multilang=False, lang=None)
     def transaction_ko(self, **post):
         _logger.info("Sabadell KO transaction feedback {}".format(post))        
         return "Some error happens requesting the payment, payment canceled..."
 
-    @http.route('/sabadell_notification', type="http", auth="public", method=["GET"], website=True)
+    @http.route('/sabadell_notification', type="http", auth="public", method=["GET"], website=True, csrf=False)
     def transaction_notification(self, **post):
         _logger.info("Sabadell notification transaction feedback {}".format(post)) 
         return werkzeug.utils.redirect(post.get("return_url", "/payment/process"))
 
-    @http.route('/sabadell_ok', type="http", auth="public", method=["GET"], website=True)
+    @http.route('/sabadell_ok', type="http", auth="public", method=["GET"], website=True, lang=None, multilang=False)
     def transaction_ok(self, **post):
         _logger.info("Sabadell OK transaction feedback {}".format(post)) 
         request.env['payment.transaction'].sudo().form_feedback(post, 'sabadell')
