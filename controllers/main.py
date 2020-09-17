@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class SabadellController(http.Controller):
 
-    @http.route('/sabadell_payment', auth='public', csrf=False, cors='*')
+    @http.route('/sabadell_payment', auth='public', csrf=False)
     def payment(self, **post):
         url = "https://api.paycomet.com/gateway/ifr-bankstore"
 
@@ -65,8 +65,9 @@ class SabadellController(http.Controller):
 
     @http.route('/sabadell_ko', website=False, type="http", multilang=False, lang=None)
     def transaction_ko(self, **post):
-        _logger.info("Sabadell KO transaction feedback {}".format(post))        
-        return "Some error happens requesting the payment, payment canceled..."
+        _logger.info("Sabadell KO transaction feedback {}".format(post))
+        provider = request.env['payment.acquirer'].sudo().search([('provider', '=', 'sabadell')])
+        return provider.error_msg
 
     @http.route('/sabadell_notification', type="http", auth="public", method=["GET"], website=True, csrf=False)
     def transaction_notification(self, **post):
