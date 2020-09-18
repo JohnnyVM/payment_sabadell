@@ -5,7 +5,7 @@
     "author": "Juan Vázquez Moreno <vmjuan90@gmail.com>",
     "website": "https://guadalstore.es",
     "category": "Payment Acquirer",
-    "depends": ["payment"],
+    "depends": ["website", "payment"],
     "data": [
         'views/views.xml',
         'views/templates.xml',

@@ -2,7 +2,7 @@
 <odoo>
 		<data noupdate="1">
 		<record id="payment_acquirer_sabadell" model="payment.acquirer">
-			<field name="name">Sabadell</field>
+			<field name="name">Pay with credit card (acquirer sabadell)</field>
 			<field name="image" type="base64" file="payment_sabadell/static/src/img/sabadell-icon.png" />
 			<field name="provider">sabadell</field>
 			<field name="company_id" ref="base.main_company" />
@@ -15,8 +15,9 @@
 			<field name="sabadell_merchant_merchantcode">dummy</field>
 			<field name="sabadell_merchant_terminal">123456</field>
 			<field name="sabadell_merchant_password">dummy</field>
-			<field name="sabadell_payment_ok"></field>
-			<field name="sabadell_payment_ko"></field>
+			<field name="sabadell_payment_ok">/sabadell/ok</field>
+			<field name="sabadell_payment_ko">/sabadell/ko</field>
+			<field name="sabadell_payment_notification">/sabadell/notification</field>
 		</record>
 		</data>
 </odoo>

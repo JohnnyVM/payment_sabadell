@@ -33,6 +33,9 @@ class AcquirerSabadell(models.Model):
     sabadell_payment_ko = \
             fields.Char("Payment ko url", groups="base.group_user")
 
+    sabadell_payment_notification = \
+            fields.Char("Payment notification url", groups="base.group_user")
+
     sabadell_language = fields.Selection(
         [('es', 'Español'), ('en', 'English'), ('fr', 'French'), ('de', 'German'), ('it', 'Italian')],
         "Sabadell language environment",
@@ -85,7 +88,54 @@ class AcquirerSabadell(models.Model):
 
 
 class SabadellTransaction(models.Model):
+    """ The documentation of Payment class is wrong, see form_feedback for more info """
     _inherit="payment.transaction"
 
-    def sabadell_form_feedback(self, data):
-        _logger.info("sabadell_form_feedback data: {}".format(data))
+    @api.model
+    def _sabadell_form_get_tx_from_data(self, data):
+        """ Given a data dict coming from sabadell, verify it and find the related transaction record.
+            Received:
+                'r': reference,
+                'ret':
+                'i':
+                'h':
+        """
+        tx = self.search([('reference', '=', data.get('r'))])
+        tx.ensure_one()
+        return tx
+
+    def _sabadell_form_get_invalid_parameters(self, data):
+        """ TODO """
+        return dict()
+
+    def _sabadell_form_validate(self, data):
+        """ Last check """
+        state = ["done", "pending", "cancel", "error"][0]
+        vals = {
+            'state': state,
+            'date': fields.Datetime.now()
+        }
+        self.write(vals)
+        return state != "error"
+
+
+    def sabadell_form_feedback(self, data, acquirer_name):
+        """ 1 - form_data valida los datos recibidos y aprueba el pago
+            2 - Actualizamos la información de la venta
+        """
+        res = super(SabadellTransaction, self).form_feedback(data, acquirer_name)
+        if res:
+            tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
+            tx = getattr(self, tx_find_method_name)(data)
+
+            if tx.state == 'done':
+                _logger.info('<%s> transaction completed, confirming order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
+                tx.sale_order_ids.with_context(send_email=True).action_confirm()
+
+            elif (tx.state != 'cancel' and tx.sale_order_ids.state == 'draft'):
+                _logger.info('<%s> transaction pending, sending quote email for order %s (ID %s)',acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
+                tx.sale_order_ids.force_quotation_send()
+
+            else:
+                _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
+

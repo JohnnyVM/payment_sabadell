@@ -16,6 +16,7 @@
 						<field name="sabadell_3dsecure" />
 						<field name="sabadell_payment_ok" />
 						<field name="sabadell_payment_ko" />
+						<field name="sabadell_payment_notification" />
 						<!-- TODO other implementations -->
 						<!-- field name="sabadell_integration" />
 						<field name="sabadell_language" />

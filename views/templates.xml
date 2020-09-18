@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-	<!-- data noupdate="1" -->
-	<data>
+	<data noupdate="1">
 
 		<!-- Declaración mínima obligatoria -->
 		<template id="sabadell_form">
