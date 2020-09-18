@@ -28,13 +28,13 @@ class AcquirerSabadell(models.Model):
             fields.Char("Merchant password", required_if_provider="sabadell", groups="base.group_user")
 
     sabadell_payment_ok = \
-            fields.Char("Payment ok url", groups="base.group_user")
+            fields.Char("Payment ok url", help="HOST/sabadell/<field>", groups="base.group_user")
 
     sabadell_payment_ko = \
-            fields.Char("Payment ko url", groups="base.group_user")
+            fields.Char("Payment ko url", help="HOST/sabadell/<field>", groups="base.group_user")
 
     sabadell_payment_notification = \
-            fields.Char("Payment notification url", groups="base.group_user")
+            fields.Char("Payment notification url", help="HOST/sabadell/<field>", groups="base.group_user")
 
     sabadell_language = fields.Selection(
         [('es', 'Español'), ('en', 'English'), ('fr', 'French'), ('de', 'German'), ('it', 'Italian')],
