@@ -15,9 +15,9 @@
 			<field name="sabadell_merchant_merchantcode">dummy</field>
 			<field name="sabadell_merchant_terminal">123456</field>
 			<field name="sabadell_merchant_password">dummy</field>
-			<field name="sabadell_payment_ok">/sabadell/ok</field>
-			<field name="sabadell_payment_ko">/sabadell/ko</field>
-			<field name="sabadell_payment_notification">/sabadell/notification</field>
+			<field name="sabadell_payment_ok">ok</field>
+			<field name="sabadell_payment_ko">ko</field>
+			<field name="sabadell_payment_notification">notification</field>
 		</record>
 		</data>
 </odoo>
