@@ -15,6 +15,17 @@ _logger = logging.getLogger(__name__)
 
 class SabadellController(http.Controller):
 
+    def _get_website_url(self):
+        domain = request.website.domain
+        if domain and domain != "localhost":
+            base_url = "{}://{}".format(
+                request.httprequest.environ["wsgi.url_scheme"],
+                request.website.domain,
+            )
+        else:
+            base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
+        return base_url or ""
+
     @http.route('/sabadell_payment', auth='public', csrf=False)
     def payment(self, **post):
         url = "https://api.paycomet.com/gateway/ifr-bankstore"
@@ -42,8 +53,15 @@ class SabadellController(http.Controller):
         if int(params["MERCHANT_AMOUNT"]) <= 30000:
             params["MERCHANT_SCA_EXCEPTION"] = "LWV"
 
+        if provider.sabadell_payment_ko:
+            params["URLKO"] = self._get_website_url() + provider.sabadell_payment_ko
+
+        if provider.sabadell_payment_ko:
+            params["URLOK"] = self._get_website_url() + provider.sabadell_payment_ok
+
         # params["MERCHANT_DATA"]
         # params Curency
+
 
         params["MERCHANT_MERCHANTSIGNATURE"] = \
                 sha256(bytes(

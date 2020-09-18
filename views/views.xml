@@ -14,6 +14,8 @@
 						<field name="sabadell_merchant_terminal" />
 						<field name="sabadell_merchant_password" />
 						<field name="sabadell_3dsecure" />
+						<field name="sabadell_payment_ok" />
+						<field name="sabadell_payment_ko" />
 						<!-- TODO other implementations -->
 						<!-- field name="sabadell_integration" />
 						<field name="sabadell_language" />

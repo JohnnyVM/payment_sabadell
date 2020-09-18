@@ -15,6 +15,8 @@
 			<field name="sabadell_merchant_merchantcode">dummy</field>
 			<field name="sabadell_merchant_terminal">123456</field>
 			<field name="sabadell_merchant_password">dummy</field>
+			<field name="sabadell_payment_ok"></field>
+			<field name="sabadell_payment_ko"></field>
 		</record>
 		</data>
 </odoo>

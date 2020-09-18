@@ -27,6 +27,12 @@ class AcquirerSabadell(models.Model):
     sabadell_merchant_password = \
             fields.Char("Merchant password", required_if_provider="sabadell", groups="base.group_user")
 
+    sabadell_payment_ok = \
+            fields.Char("Payment ok url", groups="base.group_user")
+
+    sabadell_payment_ko = \
+            fields.Char("Payment ko url", groups="base.group_user")
+
     sabadell_language = fields.Selection(
         [('es', 'Español'), ('en', 'English'), ('fr', 'French'), ('de', 'German'), ('it', 'Italian')],
         "Sabadell language environment",
