@@ -6,6 +6,8 @@
 
 import logging
 
+from decimal import Decimal
+
 from odoo import api, models, fields, http
 
 _logger = logging.getLogger(__name__)
@@ -97,7 +99,7 @@ class SabadellTransaction(models.Model):
             Received:
                 'r': reference,
                 'ret':
-                'i':
+                'i': amount
                 'h':
         """
         tx = self.search([('reference', '=', data.get('r'))])
@@ -128,13 +130,15 @@ class SabadellTransaction(models.Model):
             tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
             tx = getattr(self, tx_find_method_name)(data)
 
-            if tx.state == 'done':
-                _logger.info('<%s> transaction completed, confirming order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
-                tx.sale_order_ids.with_context(send_email=True).action_confirm()
+            amount_match = str(int(Decimal(tx.amount) * 100)) == data.get('i')
+            if amount_match:
+                if tx.state == 'done':
+                    _logger.info('<%s> transaction completed, confirming order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
+                    tx.sale_order_ids.with_context(send_email=True).action_confirm()
 
-            elif (tx.state != 'cancel' and tx.sale_order_ids.state == 'draft'):
-                _logger.info('<%s> transaction pending, sending quote email for order %s (ID %s)',acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
-                tx.sale_order_ids.force_quotation_send()
+                elif (tx.state != 'cancel' and tx.sale_order_ids.state == 'draft'):
+                    _logger.info('<%s> transaction pending, sending quote email for order %s (ID %s)',acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
+                    tx.sale_order_ids.force_quotation_send()
 
             else:
                 _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
