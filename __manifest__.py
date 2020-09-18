@@ -13,4 +13,5 @@
         ],
     "license": "AGPL-3",
     "installable": True,
+    'uninstall_hook': 'uninstall_hook'
 }
