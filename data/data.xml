@@ -3,11 +3,12 @@
 		<data noupdate="1">
 		<record id="payment_acquirer_sabadell" model="payment.acquirer">
 			<field name="name">Pay with credit card (acquirer sabadell)</field>
-			<field name="image" type="base64" file="payment_sabadell/static/src/img/sabadell-icon.png" />
+			<field name="image_128" type="base64" file="payment_sabadell/static/src/img/sabadell-icon.png" />
 			<field name="provider">sabadell</field>
 			<field name="company_id" ref="base.main_company" />
 			<field name="view_template_id" ref="sabadell_form" />
-			<field name="environment">test</field>
+			<field name="state">disabled</field>
+			<field name="display_as">Payment with credit card</field>
 			<field name="pre_msg"><![CDATA[<p>You will be directed to the Sabadell website after clikcking in the payment button</p>]]></field>
 			<field name="description" type="html">
 				<p>A payment gateway to accept online payments via credit cards.</p>
@@ -15,8 +16,6 @@
 			<field name="sabadell_merchant_merchantcode">dummy</field>
 			<field name="sabadell_merchant_terminal">123456</field>
 			<field name="sabadell_merchant_password">dummy</field>
-			<field name="sabadell_payment_ok">ok</field>
-			<field name="sabadell_payment_ko">ko</field>
 			<field name="sabadell_payment_notification">notification</field>
 		</record>
 		</data>

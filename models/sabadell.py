@@ -8,7 +8,7 @@ import logging
 
 from decimal import Decimal
 
-from odoo import api, models, fields, http
+from odoo import models, fields, http
 
 _logger = logging.getLogger(__name__)
 
@@ -64,7 +64,6 @@ class AcquirerSabadell(models.Model):
         groups="base.group_user"
     )
 
-    @api.model
     def _get_website_url(self):
         domain = http.request.website.domain
         if domain and domain != "localhost":
@@ -93,7 +92,6 @@ class SabadellTransaction(models.Model):
     """ The documentation of Payment class is wrong, see form_feedback for more info """
     _inherit="payment.transaction"
 
-    @api.model
     def _sabadell_form_get_tx_from_data(self, data):
         """ Given a data dict coming from sabadell, verify it and find the related transaction record.
             Received:
