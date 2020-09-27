@@ -60,11 +60,9 @@ class SabadellController(http.Controller):
         if int(params["MERCHANT_AMOUNT"]) <= 30000:
             params["MERCHANT_SCA_EXCEPTION"] = "LWV"
 
-        if provider.sudo().sabadell_payment_ok:
-            params["URLOK"] = self._get_website_url() + '/sabadell/' + provider.sudo().sabadell_payment_ok
-
-        if provider.sudo().sabadell_payment_ko:
-            params["URLKO"] = self._get_website_url() + '/sabadell/' + provider.sudo().sabadell_payment_ko
+        # THESE are landing
+        params["URLOK"] = self._get_website_url() + '/sabadell/ok'
+        params["URLKO"] = self._get_website_url() + '/sabadell/ko'
 
         # params["MERCHANT_DATA"]
 
@@ -93,11 +91,11 @@ class SabadellController(http.Controller):
         provider = request.env['payment.acquirer'].sudo().search([('provider', '=', 'sabadell')])
         provider.ensure_one()
 
-        if endpoint == provider.sudo().sabadell_payment_ok:
+        if endpoint == 'ok':
             request.env['payment.transaction'].sudo().sabadell_form_feedback(post, 'sabadell')
             return werkzeug.utils.redirect(post.get("return_url", "/payment/process"))
 
-        if endpoint == provider.sudo().sabadell_payment_ko:
+        if endpoint == 'ko':
             pass
 
         if endpoint == provider.sudo().sabadell_payment_notification:

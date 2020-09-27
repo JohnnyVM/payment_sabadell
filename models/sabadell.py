@@ -8,7 +8,7 @@ import logging
 
 from decimal import Decimal
 
-from odoo import models, fields, http
+from odoo import api, models, fields, http
 
 _logger = logging.getLogger(__name__)
 
@@ -28,12 +28,6 @@ class AcquirerSabadell(models.Model):
 
     sabadell_merchant_password = \
             fields.Char("Merchant password", required_if_provider="sabadell", groups="base.group_user")
-
-    sabadell_payment_ok = \
-            fields.Char("Payment ok url", help="HOST/sabadell/<field>", groups="base.group_user")
-
-    sabadell_payment_ko = \
-            fields.Char("Payment ko url", help="HOST/sabadell/<field>", groups="base.group_user")
 
     sabadell_payment_notification = \
             fields.Char("Payment notification url", help="HOST/sabadell/<field>", groups="base.group_user")
@@ -64,6 +58,7 @@ class AcquirerSabadell(models.Model):
         groups="base.group_user"
     )
 
+    @api.model
     def _get_website_url(self):
         domain = http.request.website.domain
         if domain and domain != "localhost":
@@ -75,6 +70,7 @@ class AcquirerSabadell(models.Model):
             base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
         return base_url or ""
 
+    @api.model
     def sabadell_get_form_action_url(self):
         """ Return URL for payment controller"""
         return self._get_website_url() + "/sabadell_payment"
@@ -92,6 +88,7 @@ class SabadellTransaction(models.Model):
     """ The documentation of Payment class is wrong, see form_feedback for more info """
     _inherit="payment.transaction"
 
+    @api.model
     def _sabadell_form_get_tx_from_data(self, data):
         """ Given a data dict coming from sabadell, verify it and find the related transaction record.
             Received:
@@ -104,10 +101,12 @@ class SabadellTransaction(models.Model):
         tx.ensure_one()
         return tx
 
+    @api.model
     def _sabadell_form_get_invalid_parameters(self, data):
         """ TODO """
         return dict()
 
+    @api.model
     def _sabadell_form_validate(self, data):
         """ Last check """
         state = ["done", "pending", "cancel", "error"][0]
@@ -118,7 +117,7 @@ class SabadellTransaction(models.Model):
         self.write(vals)
         return state != "error"
 
-
+    @api.model
     def sabadell_form_feedback(self, data, acquirer_name):
         """ 1 - form_data valida los datos recibidos y aprueba el pago
             2 - Actualizamos la información de la venta
