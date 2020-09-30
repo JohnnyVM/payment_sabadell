@@ -16,7 +16,7 @@ class AcquirerSabadell(models.Model):
     """ Sabadell Model class """
     _inherit = 'payment.acquirer'
 
-    cription = "Sabadell payment acquirer model"
+    _description = "Sabadell payment acquirer model"
 
     provider = fields.Selection(selection_add=[('sabadell', 'Sabadell')])
 
@@ -70,6 +70,21 @@ class AcquirerSabadell(models.Model):
             base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
         return base_url or ""
 
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+        """
+        res = super(AcquirerSabadell, self)._get_feature_support()
+        res['fees'].append('sabadell')
+        res['authorize'].append('sabadell')
+        return res
+
     @api.model
     def sabadell_get_form_action_url(self):
         """ Return URL for payment controller"""
@@ -86,36 +101,44 @@ class AcquirerSabadell(models.Model):
 
 class SabadellTransaction(models.Model):
     """ The documentation of Payment class is wrong, see form_feedback for more info """
-    _inherit="payment.transaction"
+    _inherit = "payment.transaction"
 
     @api.model
     def _sabadell_form_get_tx_from_data(self, data):
-        """ Given a data dict coming from sabadell, verify it and find the related transaction record.
-            Received:
-                'r': reference,
-                'ret':
-                'i': amount
-                'h':
-        """
-        tx = self.search([('reference', '=', data.get('r'))])
+        """ Given a data dict coming from sabadell, verify it and find the related transaction record. """
+        tx = self.search([('reference', '=', data.get('TransactionName'))])
         tx.ensure_one()
         return tx
 
     @api.model
     def _sabadell_form_get_invalid_parameters(self, data):
-        """ TODO """
+        """ Check for invalid received parameters """
+        # TODO
         return dict()
 
     @api.model
     def _sabadell_form_validate(self, data):
         """ Last check """
-        state = ["done", "pending", "cancel", "error"][0]
+        # TODO check Terminal and other data, notification
+
+        state = "error"
+        operation = data.get("TransactionType")
+        if operation == "1":  # aprobación
+            if self.state in ["draft", "pending", "authorized"]:
+                status = "done"
+
+        elif operation == "2":  # Devolución
+            if self.state in ["done"]:
+                status = "cancel"
+
         vals = {
             'state': state,
             'date': fields.Datetime.now()
         }
         self.write(vals)
+
         return state != "error"
+
 
     @api.model
     def sabadell_form_feedback(self, data, acquirer_name):
@@ -127,15 +150,19 @@ class SabadellTransaction(models.Model):
             tx_find_method_name = '_%s_form_get_tx_from_data' % acquirer_name
             tx = getattr(self, tx_find_method_name)(data)
 
-            amount_match = str(int(Decimal(tx.amount) * 100)) == data.get('i')
+            amount_match = str(int(Decimal(tx.amount) * 100)) == data.get('Amount')
             if amount_match:
                 if tx.state == 'done':
                     _logger.info('<%s> transaction completed, confirming order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
                     tx.sale_order_ids.with_context(send_email=True).action_confirm()
 
                 elif (tx.state != 'cancel' and tx.sale_order_ids.state == 'draft'):
-                    _logger.info('<%s> transaction pending, sending quote email for order %s (ID %s)',acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
+                    _logger.info('<%s> transaction pending, sending quote email for order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
                     tx.sale_order_ids.force_quotation_send()
+
+                elif tx.state == "cancel" and tx.sale_order_ids.state == "done":
+                    _logger.info('<%s> transaction canceled, sending quote email for order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
+                    tx.sale_order_ids.with_context(send_email=True).action_cancel()
 
             else:
                 _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', acquirer_name, tx.sale_order_ids.name, tx.sale_order_ids.id)
