@@ -106,7 +106,7 @@ class SabadellTransaction(models.Model):
     @api.model
     def _sabadell_form_get_tx_from_data(self, data):
         """ Given a data dict coming from sabadell, verify it and find the related transaction record. """
-        tx = self.search([('reference', '=', data.get('TransactionName'))])
+        tx = self.search([('reference', '=', data.get('Order'))])
         tx.ensure_one()
         return tx
 
