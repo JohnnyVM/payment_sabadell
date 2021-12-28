@@ -30,7 +30,9 @@ class SabadellController(http.Controller):
     def payment(self, **post):
         url = "https://api.paycomet.com/gateway/ifr-bankstore"
 
-        provider = request.env['payment.acquirer'].sudo().search([('provider', '=', 'sabadell')])
+        provider = request.env['payment.acquirer'].sudo().search(
+            [('provider', '=', 'sabadell'), '|', ('website_id', '=', request.website.id), ('website_id', '=', False)]
+        )
         provider.ensure_one()
 
         params = {
