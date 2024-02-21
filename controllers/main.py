@@ -60,8 +60,6 @@ class SabadellController(http.Controller):
             params["MERCHANT_CURRENCY"] = currency.name
 
             # https://www.bsdev.es/en/documentacion/psd2-parametros
-            # LWV | Exception for low amounts. This exception includes payments of 30 EUR or less 
-            # TODO ??? abrir un ticket para saber que significa esto
             # if int(params["MERCHANT_AMOUNT"]) <= 3000:
             #     params["MERCHANT_SCA_EXCEPTION"] = "LWV"
 
